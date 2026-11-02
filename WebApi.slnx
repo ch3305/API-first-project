@@ -1,3 +1,5 @@
 <Solution>
+  <Project Path="Enition/Enition.csproj" Id="8ca15a89-e637-4234-a3f5-8d49b0c8a44e" />
+  <Project Path="Repositpories/Repositpories.csproj" Id="ee09fab1-0d7b-4419-af4b-03eba8e454e2" />
   <Project Path="WebApi/WebApi.csproj" />
 </Solution>

@@ -11,7 +11,7 @@
         [Required]
         public string lastname { get; set; }
         [Required]
-        public int password { get; set; }
+        public string password { get; set; }
         public int id { get; set; }
     }
 

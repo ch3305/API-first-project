@@ -40,6 +40,15 @@ namespace WebApi.Controllers
         [HttpPost]
         public ActionResult<User> Post([FromBody] User PostUser)
         {
+            string[] PostUserDetails = new[]{PostUser.email, PostUser.firstname, PostUser.lastname};
+
+            var result=Zxcvbn.Core.EvaluatePassword((PostUser.password).ToString(), PostUserDetails);
+            int score=result.Score;
+            if(score<2)
+            {
+                return BadRequest(new { message = "הסיסמה חלשה מדי. יש לבחור סיסמה חזקה יותר." });
+
+            }
             int numberOfUsers = System.IO.File.ReadLines(filePath).Count();
             PostUser.id = numberOfUsers + 1;
             string userJson = JsonSerializer.Serialize(PostUser);
@@ -50,6 +59,7 @@ namespace WebApi.Controllers
         [HttpPost("Login")]
         public ActionResult<User> Post([FromBody] LoginUser PostUser)
         {
+
             
             if (!System.IO.File.Exists(filePath))
             {

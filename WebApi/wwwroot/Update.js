@@ -21,7 +21,7 @@ const update = async () => {
         return;
     }
     const UpdateUser = {
-         id:userId ,email: emailUp.value, firstname: firstNameUp.value, lastname: lastNameUp.value, password:Number( passwordUp.value)
+         id:userId ,email: emailUp.value, firstname: firstNameUp.value, lastname: lastNameUp.value, password:passwordUp.value
     };
     const response = await fetch(`api/Users/${userId}`, {
         method: 'PUT',

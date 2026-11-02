@@ -1,2 +1,1 @@
-
-{"email":"1@2","firstname":"chani","lastname":"shulman","password":12,"id":2}
+{"email":"1@2","firstname":"cha","lastname":"sh","password":"chsh246","id":1}

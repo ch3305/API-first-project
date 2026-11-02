@@ -2,35 +2,38 @@
 <html>
 <head>
     <meta charset="utf-8" />
-    <title></title>    
+    <title></title>
     <style>
-    body {
-        display: flex;
-        gap: 15px;
-    }
+        body {
+            display: flex;
+            gap: 15px;
+        }
 
-    .reg {
-        display: flex;
-        flex-direction: column;
-        gap: 5px;
-    }
+        .reg {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
 
-    .login {
-        display: flex;
-        flex-direction: column;
-        gap: 2px;
-    }
+        .login {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
 
-    input {
-        width: 200px;
-        height: 10px;
-    }
+        input {
+            width: 200px;
+            height: 10px;
+        }
 
-    button {
-        width: 200px;
-        height: 50px;
-    }
-</style>
+        button {
+            width: 200px;
+            height: 50px;
+        }
+    </style>
+
+    <script defer src="Index.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/zxcvbn/4.4.2/zxcvbn.js"></script>
 </head>
 
 <body>
@@ -40,6 +43,8 @@
         <input class="FirstName" type="text" placeholder="שם פרטי" />
         <input class="LastName" type="text" placeholder="שם משפחה" />
         <button onclick="postdata()">להרשם</button>
+        <button onclick="passwordCheck()">check your password</button>
+        <progress value="0" max="4"></progress>
     </div>
 
     <div class="login">
@@ -48,7 +53,5 @@
         <button onclick="login()">התחברות</button>
     </div>
     <a href="Update.html">UpdateDedails</a>
- 
 </body>
 </html>
-<script src="Index.js"></script>
