@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Services;
 using System.Text.Json;
 using Zxcvbn;
+using Services;
+using Enitition;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -17,22 +20,16 @@ namespace WebApi.Controllers
             return new string[] { "value1", "value2" };
         }
         static string filePath = "text.txt";
+        UserService us=new UserService();   
 
         // GET api/<Users>/5
         [HttpGet("{id}")]
         public ActionResult<User> Get(int id)
         {
-            using (StreamReader reader = System.IO.File.OpenText(filePath))
-            {
-                string? currentUserInFile;
-                while ((currentUserInFile = reader.ReadLine()) != null)
-                {
-                    User user =JsonSerializer.Deserialize<User>(currentUserInFile);
-                    if (user.id == id)
-                        return Ok(user);
-                }
-            }
-            return NotFound(); 
+            User user = us.GetUserById(id);
+            if(user == null)
+                return NotFound();
+            return user;
 
         }
 
@@ -49,43 +46,17 @@ namespace WebApi.Controllers
                 return BadRequest(new { message = "הסיסמה חלשה מדי. יש לבחור סיסמה חזקה יותר." });
 
             }
-            int numberOfUsers = System.IO.File.ReadLines(filePath).Count();
-            PostUser.id = numberOfUsers + 1;
-            string userJson = JsonSerializer.Serialize(PostUser);
-            System.IO.File.AppendAllText(filePath, userJson +
-            Environment.NewLine);
+            us.AddUser(PostUser);
             return CreatedAtAction(nameof(Get), new { id = PostUser.id }, PostUser);
         }
         [HttpPost("Login")]
         public ActionResult<User> Post([FromBody] LoginUser PostUser)
         {
-
-            
-            if (!System.IO.File.Exists(filePath))
-            {
-                return NotFound(); 
-            }
-
-            using (StreamReader reader = System.IO.File.OpenText(filePath))
-            {
-                string? currentUserInFile;
-                while ((currentUserInFile = reader.ReadLine()) != null)
-                {
-                    
-                    if (string.IsNullOrWhiteSpace(currentUserInFile))
-                    {
-                        continue;
-                    }
-
-                    User? user = JsonSerializer.Deserialize<User>(currentUserInFile);
-
-                    if (user != null && user.email == PostUser.email && user.password == PostUser.password)
-                    {
-                        return Ok(user);
-                    }
-                }
-            }
+            User user = us.Login(PostUser);
+            if (user != null)
+                return Ok(user);
             return NotFound();
+         
         }
         // PUT api/<Users>/5
         [HttpPut("{id}")]
@@ -93,36 +64,14 @@ namespace WebApi.Controllers
         {
             if (user == null)
                 return BadRequest();
-            if (!System.IO.File.Exists(filePath))
-            {
-                return NotFound();
-            }
-            string textToReplace = string.Empty;
-            using (StreamReader reader = System.IO.File.OpenText(filePath))
-            {
-                string currentUserInFile;
-                while ((currentUserInFile = reader.ReadLine()) != null)
-                {
-                    User user1 = JsonSerializer.Deserialize<User>(currentUserInFile);
-                    if (user1.id == id)
-                        textToReplace = currentUserInFile;
-                }
-            }
-                if(textToReplace != string.Empty)
-               {
-                string text = System.IO.File.ReadAllText(filePath);
-                text = text.Replace(textToReplace,
-                JsonSerializer.Serialize(user));
-                System.IO.File.WriteAllText(filePath, text);
-               }
-            return NoContent();
+            return us.Update(user);
         }
 
         // DELETE api/<Users>/5
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
-
+            us.DeleteUser(id);
         }
     }
 }
