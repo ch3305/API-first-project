@@ -3,24 +3,25 @@ using System.Collections.Generic;
 using System.Text;
 using System.Text.Json;
 using Enitition;
+using Entities;
 
 
 namespace Repositories
 {
-    public class UserRepository
+    public class UserRepository : IUserRepository
     {
         static string filePath = "text.txt";
         public IEnumerable<User> GetAllUsers()
         {
             using (StreamReader reader = System.IO.File.OpenText(filePath))
             {
-                List<User> users=new List<User> (); 
+                List<User> users = new List<User>();
                 string? currentUserInFile;
                 while ((currentUserInFile = reader.ReadLine()) != null)
                 {
                     User user = JsonSerializer.Deserialize<User>(currentUserInFile);
                     users.Add(user);
-                       
+
                 }
                 return users;
             }
@@ -35,10 +36,11 @@ namespace Repositories
                 while ((currentUserInFile = reader.ReadLine()) != null)
                 {
                     User user = JsonSerializer.Deserialize<User>(currentUserInFile);
-                    
+                    if(user.id==id)
+                        return user;
 
                 }
-                return users;
+              
             }
             return null;
 
@@ -52,7 +54,7 @@ namespace Repositories
                 while ((currentUserInFile = reader.ReadLine()) != null)
                 {
                     User user = JsonSerializer.Deserialize<User>(currentUserInFile);
-                    if (user.Email == loginUser.email && user.Password == loginUser.password)
+                    if (user.email == loginUser.email && user.password == loginUser.password)
                         return user;
                 }
             }
@@ -60,12 +62,12 @@ namespace Repositories
         }
         public User AddUser(User user)
         {
-            if (passwordValidation(user.Password) <= 2)
+            if (passwordValidation(user.password) <= 2)
             {
                 return null;
             }
             int numberOfUsers = System.IO.File.ReadLines(filePath).Count();
-            user.UserID = numberOfUsers + 1;
+            user.id = numberOfUsers + 1;
             string userJson = JsonSerializer.Serialize(user);
             System.IO.File.AppendAllText(filePath, userJson + Environment.NewLine);
             return user;

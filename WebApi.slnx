@@ -1,5 +1,5 @@
 <Solution>
-  <Project Path="Enitition/Enitition.csproj" Id="492f0438-cade-45c5-b239-d59d3daf1524" />
+  <Project Path="Enitition/Entities.csproj" Id="492f0438-cade-45c5-b239-d59d3daf1524" />
   <Project Path="Repositories/Repositories.csproj" Id="c1e3403e-e9e7-43cf-8d89-ddd267e93894" />
   <Project Path="Services/Services.csproj" Id="b1ece642-eea6-4431-93a4-abce235ff845" />
   <Project Path="WebApi/WebApi.csproj" />

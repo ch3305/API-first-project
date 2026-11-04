@@ -6,12 +6,17 @@ using Enitition;
 
 namespace Services
 {
-    public class UserService
+    public class UserService : IUserService
     {
-        UserRepository ur = new UserRepository();
+
+        IUserRepository ur;
+        public UserService(IUserRepository userRepository)
+        {
+            ur= userRepository;
+        }
         public IEnumerable<User> GetAllUsers()
         {
-           return ur.GetAllUsers();
+            return ur.GetAllUsers();
         }
         public User Login(LoginUser loginUser)
         {
@@ -31,7 +36,7 @@ namespace Services
 
         public void DeleteUser(int id)
         {
-             ur.DeleteUser(id);
+            ur.DeleteUser(id);
         }
 
         public bool Update(User user)

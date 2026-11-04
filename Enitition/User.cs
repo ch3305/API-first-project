@@ -1,7 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
 
-
+namespace Entities
+{
     public class User
     {
         [EmailAddress]
@@ -14,4 +15,4 @@
         public string password { get; set; }
         public int id { get; set; }
     }
-
+}
