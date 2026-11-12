@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Repositories;
-using Enitition;
+using Entities;
 
 namespace Services
 {

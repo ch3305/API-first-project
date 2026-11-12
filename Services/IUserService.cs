@@ -1,4 +1,6 @@
-﻿namespace Services
+﻿
+using Entities;
+namespace Services
 {
     public interface IUserService
     {
