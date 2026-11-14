@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Text.Json;
-using Enitition;
+//fix: Removed the stray using of the Enitition namespace
 using Entities;
 
 
@@ -10,6 +10,7 @@ namespace Repositories
 {
     public class UserRepository : IUserRepository
     {
+        //Where does the app look for text.txt? The path is relative to the folder the app runs from: is the file there when the app runs?
         static string filePath = "text.txt";
         public IEnumerable<User> GetAllUsers()
         {

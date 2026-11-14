@@ -10,6 +10,7 @@ const postdata = async () => {
         alert("cant continue with the sign up, your password is weak");
         return;
     }
+    //In JavaScript, variable names are camelCase: postUser
     const PostUser = {
         email: email, firstname: firstName, lastname: lastName, password: password
     };

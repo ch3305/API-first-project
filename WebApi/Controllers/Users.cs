@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿//In C#, each file is named after the class it declares: this file should be UsersController.cs
+using Microsoft.AspNetCore.Mvc;
 using Services;
 using System.Text.Json;
 using Zxcvbn;
@@ -11,6 +12,7 @@ namespace WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    //In ASP.NET Core, controller class names end with Controller: UsersController (the route stays api/Users)
     public class Users : ControllerBase
     {
         IUserService _userService;
@@ -42,6 +44,7 @@ namespace WebApi.Controllers
         [HttpPost]
         public ActionResult<User> Post([FromBody] User PostUser)
         {
+            //In C#, local variables are camelCase: postUserDetails
             string[] PostUserDetails = new[] { PostUser.email, PostUser.firstname, PostUser.lastname };
 
             var result = Zxcvbn.Core.EvaluatePassword((PostUser.password).ToString(), PostUserDetails);
@@ -60,6 +63,7 @@ namespace WebApi.Controllers
             User user = _userService.Login(PostUser);
             if (user != null)
                 return Ok(user);
+            //The assignment asks a wrong login to return 204 NoContent: what should this return instead of NotFound?
             return NotFound();
 
         }

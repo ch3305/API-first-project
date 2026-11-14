@@ -3,6 +3,7 @@
 
 namespace Entities
 {
+    //Stored data uses lowercase names and System.Text.Json is case-sensitive: keep the names and add PropertyNameCaseInsensitive = true to the JsonSerializerOptions instead of renaming them
     public class User
     {
         [EmailAddress]
