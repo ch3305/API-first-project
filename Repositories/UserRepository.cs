@@ -36,6 +36,7 @@ namespace Repositories
                 while ((currentUserInFile = reader.ReadLine()) != null)
                 {
                     User user = JsonSerializer.Deserialize<User>(currentUserInFile);
+                    //Why does GET of a missing id answer 500? Check the console error: is text.txt found, and what happens when a line is read as null?
                     if(user.id==id)
                         return user;
 
@@ -54,6 +55,7 @@ namespace Repositories
                 while ((currentUserInFile = reader.ReadLine()) != null)
                 {
                     User user = JsonSerializer.Deserialize<User>(currentUserInFile);
+                    //Why does login answer 500? Check the console error: what does Deserialize return for an empty or missing line?
                     if (user.email == loginUser.email && user.password == loginUser.password)
                         return user;
                 }
@@ -66,6 +68,7 @@ namespace Repositories
             {
                 return null;
             }
+            //Why does POST answer 500? Check the console error: is text.txt found in the folder the app runs from?
             int numberOfUsers = System.IO.File.ReadLines(filePath).Count();
             user.id = numberOfUsers + 1;
             string userJson = JsonSerializer.Serialize(user);
