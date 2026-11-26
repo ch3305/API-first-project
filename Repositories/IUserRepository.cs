@@ -5,11 +5,10 @@ namespace Repositories
 {
     public interface IUserRepository
     {
-        User AddUser(User user);
-        void DeleteUser(int id);
-        IEnumerable<User> GetAllUsers();
+        Task<User> AddUser(User user);
+        Task<bool> DeleteUser(int id);
         User GetUserById(int id);
         User Login(LoginUser loginUser);
-        bool UpdateUser(User user);
+        Task<bool> UpdateUser(User user);
     }
 }

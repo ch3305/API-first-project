@@ -3,7 +3,8 @@
 using System;
 using System.Collections.Generic;
 
-namespace WebApi.Models;
+
+namespace Entities;
 
 public partial class Product
 {

@@ -4,109 +4,59 @@ using System.Text;
 using System.Text.Json;
 using Enitition;
 using Entities;
-
+using Microsoft.EntityFrameworkCore;
 
 namespace Repositories
 {
+
     public class UserRepository : IUserRepository
     {
+        StoreDbContext context = new StoreDbContext();
         static string filePath = "text.txt";
-        public IEnumerable<User> GetAllUsers()
-        {
-            using (StreamReader reader = System.IO.File.OpenText(filePath))
-            {
-                List<User> users = new List<User>();
-                string? currentUserInFile;
-                while ((currentUserInFile = reader.ReadLine()) != null)
-                {
-                    User user = JsonSerializer.Deserialize<User>(currentUserInFile);
-                    users.Add(user);
-
-                }
-                return users;
-            }
-            return null;
-
-        }
+        
         public User GetUserById(int id)
         {
-            using (StreamReader reader = System.IO.File.OpenText(filePath))
-            {
-                string? currentUserInFile;
-                while ((currentUserInFile = reader.ReadLine()) != null)
-                {
-                    User user = JsonSerializer.Deserialize<User>(currentUserInFile);
-                    if(user.id==id)
-                        return user;
-
-                }
-              
-            }
-            return null;
+          
+            User user = context.Users.FirstOrDefault(u => u.Id == id);
+            return user;
 
         }
 
         public User Login(LoginUser loginUser)
         {
-            using (StreamReader reader = System.IO.File.OpenText(filePath))
-            {
-                string? currentUserInFile;
-                while ((currentUserInFile = reader.ReadLine()) != null)
-                {
-                    User user = JsonSerializer.Deserialize<User>(currentUserInFile);
-                    if (user.email == loginUser.email && user.password == loginUser.password)
-                        return user;
-                }
-            }
-            return null;
-        }
-        public User AddUser(User user)
-        {
-            if (passwordValidation(user.password) <= 2)
-            {
-                return null;
-            }
-            int numberOfUsers = System.IO.File.ReadLines(filePath).Count();
-            user.id = numberOfUsers + 1;
-            string userJson = JsonSerializer.Serialize(user);
-            System.IO.File.AppendAllText(filePath, userJson + Environment.NewLine);
+            User user = context.Users.FirstOrDefault(u => u.Email == loginUser.email && u.Password == loginUser.password);
             return user;
+        }
+        public async Task<User> AddUser(User user)
+        {
+            await context.AddAsync(user);
+            await context.SaveChangesAsync();
+            return user;
+           
         }
         private static int passwordValidation(string password)
         {
             return 3;// Zxcvbn.Core.EvaluatePassword(password).Score;
         }
-        public bool UpdateUser(User user)
+        public async  Task<bool> UpdateUser(User user)
         {
-            if (user == null)
+            User value =context.Users.ToList().FirstOrDefault(u => u.Id == user.Id);
+            if(value == null)
                 return false;
-            if (!System.IO.File.Exists(filePath))
+            context.Entry(value).CurrentValues.SetValues(user);
+            await context.SaveChangesAsync();
+            return true;
+           
+        }
+        public async Task<bool> DeleteUser(int id)
+        {
+            User user = context.Users.FirstOrDefault(u => u.Id == id);
+            if (user != null)
             {
-                return false;
-            }
-            string textToReplace = string.Empty;
-            using (StreamReader reader = System.IO.File.OpenText(filePath))
-            {
-                string currentUserInFile;
-                while ((currentUserInFile = reader.ReadLine()) != null)
-                {
-                    User user1 = JsonSerializer.Deserialize<User>(currentUserInFile);
-                    if (user1.id == user.id)
-                        textToReplace = currentUserInFile;
-                }
-            }
-            if (textToReplace != string.Empty)
-            {
-                string text = System.IO.File.ReadAllText(filePath);
-                text = text.Replace(textToReplace,
-                JsonSerializer.Serialize(user));
-                System.IO.File.WriteAllText(filePath, text);
+               context.Users.Remove(user);
+               await context.SaveChangesAsync();
             }
             return true;
-        }
-        public void DeleteUser(int id)
-        {
-
         }
     }
 }

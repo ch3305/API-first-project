@@ -4,10 +4,15 @@ using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 
-namespace WebApi.Models;
+
+namespace Entities;
 
 public partial class StoreDbContext : DbContext
 {
+    public StoreDbContext()
+    {
+            
+    }
     public StoreDbContext(DbContextOptions<StoreDbContext> options)
         : base(options)
     {
@@ -27,12 +32,12 @@ public partial class StoreDbContext : DbContext
     {
         modelBuilder.Entity<Category>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK_categories");
+            object value = entity.HasKey(e => e.Id).HasName("PK_categories");
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.CategoryName)
                 .IsRequired()
-                .HasMaxLength(50)
+                .HasMaxLength(50) 
                 .HasColumnName("category_name");
         });
 
@@ -40,12 +45,12 @@ public partial class StoreDbContext : DbContext
         {
             entity.HasKey(e => e.Id).HasName("PK_Table_1");
 
-            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Id).HasColumnName("id"); 
             entity.Property(e => e.Date).HasColumnName("date");
             entity.Property(e => e.OrderSum)
                 .HasColumnType("money")
                 .HasColumnName("order_sum");
-            entity.Property(e => e.UserId).HasColumnName("user_id");
+            object value = entity.Property(e => e.UserId).HasColumnName("user_id");
 
             entity.HasOne(d => d.User).WithMany(p => p.Orders)
                 .HasForeignKey(d => d.UserId)

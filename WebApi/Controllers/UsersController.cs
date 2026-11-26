@@ -11,16 +11,16 @@ namespace WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class Users : ControllerBase
+    public class UsersController : ControllerBase
     {
         IUserService _userService;
-        public Users(IUserService userService)
+        public UsersController(IUserService userService)
         {
             _userService = userService;
         }
         // GET: api/<Users>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public IEnumerable<string>Get()
         {
             return new string[] { "value1", "value2" };
         }
@@ -40,22 +40,21 @@ namespace WebApi.Controllers
 
         // POST api/<Users>
         [HttpPost]
-        public ActionResult<User> Post([FromBody] User PostUser)
+        public async Task<ActionResult<User>> Post([FromBody] User PostUser)
         {
-            string[] PostUserDetails = new[] { PostUser.email, PostUser.firstname, PostUser.lastname };
+            var result = Zxcvbn.Core.EvaluatePassword((PostUser.Password));
 
-            var result = Zxcvbn.Core.EvaluatePassword((PostUser.password).ToString(), PostUserDetails);
-            int score = result.Score;
-            if (score < 2)
+            if (result.Score <2)
             {
                 return BadRequest(new { message = "הסיסמה חלשה מדי. יש לבחור סיסמה חזקה יותר." });
 
             }
-            _userService.AddUser(PostUser);
-            return CreatedAtAction(nameof(Get), new { id = PostUser.id }, PostUser);
+            await _userService.AddUser(PostUser);
+            return CreatedAtAction(nameof(Get), new { id = PostUser.Id }, PostUser);
+
         }
         [HttpPost("Login")]
-        public ActionResult<User> Post([FromBody] LoginUser PostUser)
+        public async Task<ActionResult<User>> Post([FromBody] LoginUser PostUser)
         {
             User user = _userService.Login(PostUser);
             if (user != null)
@@ -65,11 +64,11 @@ namespace WebApi.Controllers
         }
         // PUT api/<Users>/5
         [HttpPut("{id}")]
-        public ActionResult<User> Put(int id, [FromBody] User user)
+        public async Task<ActionResult<User>> Put(int id, [FromBody] User user)
         {
             if (user == null)
                 return BadRequest();
-            var updated = _userService.Update(user);
+            var updated = await _userService.Update(user);
             if (!updated)
                 return NotFound();
 

@@ -14,10 +14,10 @@ namespace Services
         {
             ur= userRepository;
         }
-        public IEnumerable<User> GetAllUsers()
-        {
-            return ur.GetAllUsers();
-        }
+        //public IEnumerable<User> GetAllUsers()
+        //{
+        //    return ur.GetAllUsers();
+        //}
         public User Login(LoginUser loginUser)
         {
             User user = ur.Login(loginUser);
@@ -29,7 +29,7 @@ namespace Services
         {
             return ur.GetUserById(id);
         }
-        public User AddUser(User user)
+        public Task<User> AddUser(User user)
         {
             return ur.AddUser(user);
         }
@@ -39,7 +39,7 @@ namespace Services
             ur.DeleteUser(id);
         }
 
-        public bool Update(User user)
+        public Task<bool> Update(User user)
         {
             return ur.UpdateUser(user);
         }
